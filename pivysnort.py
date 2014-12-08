@@ -52,6 +52,11 @@
 #	script currently only supports generating signatures for traffic with PI implants 
 #	operating in direct connection mode, not via SOCKS or HTTP proxies (rare).
 #
+#	All generated signatures are for traffic from the C2 server to the affected client
+#	since we can not reliably predict what the headers will be from the client. The one 
+#	exception is the client heartbeat - this stays consistent and contains no host
+#	specific data.
+#
 #	v1.0: 07-Dec-2014
 #	v1.0.1: 07-Dec-2014 - Fixed typos, added more signature prototypes.
 
