@@ -5,13 +5,23 @@
 #	Leverages camcrypt to generate Snort signature content for known PI passwords.
 #	https://github.com/knowmalware/camcrypt
 #
+#	Usage: pivysnort.py [options]
+#
+#	Options:
+#		-h, --help				show this help message and exit
+#		-p PASSWORD, --password=PASSWORD
+#								plaintext Poison Ivy password
+#		-k KEY, --key=KEY		a key in plain hex format
+#		-a, --all				print full Snort signature vice just msg, content and
+#								depth (you must edit the SID)
+#
 #	The following resources provided much appreciated technical insights on the PI 
 #	protocol:
 #	https://www.fireeye.com/resources/pdfs/fireeye-poison-ivy-report.pdf
 #	https://github.com/MITRECND/chopshop/blob/master/modules/poisonivy_23x.py
 #
 #	PI utilizes camellia for encryption which has a 16 byte blocksize. Prior to encryption
-#	data to be sent over the wire is prepended with a 16 byte header as described in the 
+#	data to be sent over the wire is prepended with a 32 byte header as described in the 
 #	above resources:
 #
 #		struct PI_chunk_header {
@@ -25,23 +35,25 @@
 #		}
 #
 #	One of the unique characteristics of PI is that the implant is a stub loader - most
-#   modules are pushed as shellcode to the implant "on demand". Because of this we can
-#	reliably predict what the initial 16 bytes of traffic from the server to the client 
-#	will be once a module is put in use. This reliance on shellcode transfer is also 
-#	reflected in traffic after the initial 256 byte handshake. Immediately after the 
-#	handshake the server will push an initial shellcode load prepended by the byte 
-#	sequence  "d0150000" which is the shellcode payload length in NBO. Note that these 
-#	four bytes are unencrypted unlike the shellcode that follows.
+#	modules are pushed as shellcode to the implant "on demand". Because of this we can
+#	reliably predict what the initial 16 bytes of traffic needed for a Snort signature 
+#	from the server to the client will be once a module is put in use. This reliance on 
+#	shellcode transfer is also reflected in traffic after the initial 256 byte handshake. 
+#	Immediately after the handshake the server will push an initial shellcode load 
+#	prepended by the byte sequence  "d0150000" which is the shellcode payload length in 
+#	NBO. Note that these four bytes are unencrypted unlike the shellcode that follows.
 #
 #	One caveat to predicting the initial 16 byte header is the use of stream IDs by PI
 #	to allow multiple simultaneous network connections. The predicted header primitives, 
 #	called prototypes within this script, were generated with the assumption that only
-#	only stream would be active at a time. Additional prototypes would need to be added
-#	for coverage in multiple simultaneous connection scenarios. Additionally, this script 
-#	only supports generating signatures for traffic with PI implants operating in 
-#	direct connection mode, not via SOCKS or HTTP proxies (rare).
+#	one  or two streams would be active at a time. Additional prototypes would need to be 
+#	added for coverage in scenarios beyond two simultaneous connections (could be an issue
+#	if the actor is active while transferring multiple large files). Additionally, this 
+#	script currently only supports generating signatures for traffic with PI implants 
+#	operating in direct connection mode, not via SOCKS or HTTP proxies (rare).
 #
 #	v1.0: 07-Dec-2014
+#	v1.0.1: 07-Dec-2014 - Fixed typos, added more signature prototypes.
 
 import binascii
 import camcrypt
@@ -59,7 +71,7 @@ parser.add_option("-k", "--key", dest="key",
                   help="a key in plain hex format")
 parser.add_option("-a", "--all",
                   action="store_true", dest="full_sig", default=False,
-                  help="print full Snort signature vice just msg, content and depth (you must edit the SID")
+                  help="print full Snort signature vice just msg, content and depth (you must edit the SID)")
 
 (options, args) = parser.parse_args()
 # Checks if a password or key was supplied, or both and errors out accordingly
@@ -97,8 +109,13 @@ prototype = [
 			["PI heartbeat(server) [" + msg_key + "]", "2700000001000000100000000a000000", ""],
 			["PI heartbeat(client) [" + msg_key + "]", "27000000010000001000000008000000", ""],
 			["PI command shell [" + msg_key + "]", "17000000010000002000000010000000", ""],
+			["PI command shell [" + msg_key + "]", "17000000020000002000000010000000", ""],
 			["PI process listing [" + msg_key + "]", "1400000001000000f0030000e8030000", ""],
+			["PI process listing [" + msg_key + "]", "1400000002000000f0030000e8030000", ""],
 			["PI connection listing [" + msg_key + "]", "3800000001000000c0020000b6020000", ""],
+			["PI connection listing [" + msg_key + "]", "3800000002000000c0020000b6020000", ""],
+			["PI hash dump [" + msg_key + "]", "5b000000010000009006000081060000", ""],
+			["PI hash dump [" + msg_key + "]", "5b000000020000009006000081060000", ""],
 			["PI init shellcode [" + msg_key + "]", "558bec50b81000000081c404f0ffff50", "d0150000"]
             ]
 
