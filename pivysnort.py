@@ -10,10 +10,10 @@
 #	Options:
 #		-h, --help				show this help message and exit
 #		-p PASSWORD, --password=PASSWORD
-#								plaintext Poison Ivy password
-#		-k KEY, --key=KEY		a key in plain hex format
+#							plaintext Poison Ivy password
+#		-k KEY, --key=KEY			a key in plain hex format
 #		-a, --all				print full Snort signature vice just msg, content and
-#								depth (you must edit the SID)
+#							depth (you must edit the SID)
 #
 #	The following resources provided much appreciated technical insights on the PI 
 #	protocol:
