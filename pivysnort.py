@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-#	pivysnort.py v1.0.2 by Mario R. De Tore, SLAC National Laboratory
+#	pivysnort.py v1.0.2 by Mario R. De Tore, SLAC National Accelerator Laboratory
 #	
 #	Leverages camcrypt to generate Snort signature content for known PI passwords.
 #	https://github.com/knowmalware/camcrypt
