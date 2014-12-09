@@ -58,7 +58,7 @@
 #	specific data.
 #
 #	Limited testing has shown the following signatures to be reliable across different PI 
-#	configurations (e.g. persistence, process inection, etc):
+#	configurations (e.g. persistence, process injection, etc):
 #
 #	PI init shellcode
 #	PI heartbeat(server)
@@ -66,7 +66,7 @@
 #	PI command shell
 #	
 #	The remaining signatures seem to only hit on specific configurations. This may require
-#	additional configuration-specific signatures.
+#	additional configuration-specific signatures for each password.
 #
 #	v1.0: 07-Dec-2014
 #	v1.0.1: 07-Dec-2014 - Fixed typos, added more signature prototypes.
