@@ -32,7 +32,7 @@
 #   needed to decrypt the traffic. Candidate passwords can be piped to the script:
 #
 #   cat passwords.txt | ./pivysnort.py -r ~/evil.pcap 
-#   ./john --wordlist=passwords.txt --rules | ./pivysnort.py -r ~/evil.pcap
+#   ./john --wordlist=passwords.txt --rules --stdout | ./pivysnort.py -r ~/evil.pcap
 #
 #	A number of common APT passwords as documented in FireEye's PI report are checked by 
 #   default. These can be updated manually via pw_list. Passwords are entered as strings, 
@@ -239,6 +239,7 @@ def build_sigs(key):
 # Our PI password cracking routine. Expects raw data, not hexlified.
 def crack(plain, cipher, source):
 	key = ""
+	keyflag = False
 	counter = 0
 	total = 0
 	print "Attempting password attack on " + source;
