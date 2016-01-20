@@ -112,7 +112,7 @@ from binascii import hexlify, unhexlify
 from optparse import OptionParser
 
 # This should be updated to reflect the location of your camellia.so
-LIBRARY_PATH = '/Users/mariod/malware/camellia.so'
+LIBRARY_PATH = '/usr/local/lib/python2.7/dist-packages/camcrypt/camellia.so'
 
 # Load options parsing routine.
 parser = OptionParser()
