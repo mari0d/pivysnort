@@ -23,6 +23,7 @@
 #   Dependencies: 
 #   camcrypt - https://github.com/knowmalware/camcrypt (please make sure to update 
 #   LIBRARY_PATH in this script)
+#   WARNING: DO NOT USE PIP OR EASY_INSTALL TO INSTALL CAMCRYPT - CLONE FROM ABOVE GIT PROJECT AND BUILD!!! 
 #   dpkt - https://code.google.com/p/dpkt/
 #
 #   pivysnort now includes the capability to ingest network traffic (libpcap/tcpdump 
@@ -112,7 +113,7 @@ from binascii import hexlify, unhexlify
 from optparse import OptionParser
 
 # This should be updated to reflect the location of your camellia.so
-LIBRARY_PATH = '/usr/local/lib/python2.7/dist-packages/camcrypt/camellia.so'
+LIBRARY_PATH = '/usr/local/lib/python2.7/dist-packages/camcrypt-1.2.0-py2.7-linux-x86_64.egg/camcrypt/camellia.so'
 
 # Load options parsing routine.
 parser = OptionParser()
