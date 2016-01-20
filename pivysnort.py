@@ -303,6 +303,7 @@ def unid_PI_sig(data):
 	exit()
 
 # The routine for extracting the encrypted data from pcap that we want to attack
+# Note: This function is actually pretty flawed and need to be rewritten. Math on the sequence numbers is off I think.
 def process_pcap():
 
 	f = open(options.pcap)
